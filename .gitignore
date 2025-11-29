@@ -1,0 +1,87 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+
+# PIP / Poetry / Pipenv
+pip-log.txt
+pip-delete-this-directory.txt
+poetry.lock
+poetry.toml
+Pipfile.lock
+
+# PyInstaller
+*.manifest
+*.spec
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Unit tests / coverage
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+htmlcov/
+pytest_cache/
+.tox/
+.nox/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+.jupyter/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+static/
+
+# Flask
+instance/
+.webassets-cache
+
+# FastAPI / Starlette
+.cache/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Type checking / tools
+.mypy_cache/
+.dmypy.json
+pyrightconfig.json
+
+# Environment files
+.env
+.env.*
+*.env
+*.ini
+*.cfg
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
