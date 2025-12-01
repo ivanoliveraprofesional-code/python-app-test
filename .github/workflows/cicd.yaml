@@ -30,13 +30,29 @@ jobs:
         with:
           push: true
           tags: x123rtyizzz/python-app:${{ steps.vars.outputs.sha_short }}
+    outputs:
+      commit_id: ${{ steps.vars.outputs.sha_short }}
 
   cd:
     needs: ci
     runs-on: self-hosted
+    env:
+      IMAGE_TAG: ${{ needs.ci.outputs.commit_id }}    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Update values.yaml image tag
+        shell: bash
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.commit_id }}
+        run: |
+          sed -i "s/^  tag: .*/  tag: \"${IMAGE_TAG}\"/" charts/python-app/values.yaml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: set image tag to ${IMAGE_TAG}" || echo "No changes to commit"
+          git push        
 
       - name: Install Argo CD CLI
         shell: bash
