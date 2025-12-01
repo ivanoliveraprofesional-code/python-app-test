@@ -35,8 +35,41 @@ jobs:
     needs: ci
     runs-on: self-hosted
     steps:
-      - name: Argocd app sync
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Argo CD CLI
         shell: bash
         run: |
-          argocd login argocd-server.argocd --insecure --gprc-web --username ${{ secrets.ARGOCD_USER }} --password ${{ secrets.ARGOCD_PASSWORD }}
+          if command -v argocd >/dev/null 2>&1; then
+            echo "argocd already installed: $(command -v argocd)"
+            argocd version || true
+            exit 0
+          fi
+
+          echo "Installing Argo CD CLI..."
+          curl -sSL -o argocd \
+            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+
+          chmod +x argocd
+
+          if sudo mv argocd /usr/local/bin/argocd 2>/dev/null; then
+            echo "Installed argocd to /usr/local/bin"
+          else
+            echo "No sudo or /usr/local/bin not writable, using local ./argocd"
+            echo "$PWD" >> $GITHUB_PATH
+            mv argocd ./argocd
+          fi
+
+      - name: Argo CD app sync
+        shell: bash
+        run: |
+          # Login to Argo CD
+          argocd login argocd-server.argocd \
+            --insecure \
+            --grpc-web \
+            --username "${{ secrets.ARGOCD_USER }}" \
+            --password "${{ secrets.ARGOCD_PASSWORD }}"
+
+          # Sync the application
           argocd app sync python-app
